@@ -17,7 +17,7 @@ from jionlp.util.logger import set_logger
 from jionlp.util.zip_file import unzip_file, UNZIP_FILE_LIST
 
 
-logging = set_logger(level='INFO', log_dir_name='.jionlp_logs')
+logging = set_logger(level=None, log_dir_name=None)
 
 # unzip dictionary files
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
