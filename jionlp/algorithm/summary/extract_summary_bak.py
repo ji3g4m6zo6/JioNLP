@@ -10,16 +10,18 @@
 import os
 import json
 import numpy as np
+try:
+    import spacy_pkuseg as pkuseg
+except:
+    import pkuseg
 
-from collections import Counter
-
-import jiojio
 from jionlp import logging
 from jionlp.rule import clean_text
 from jionlp.rule import check_chinese_char
 from jionlp.gadget import split_sentence
 from jionlp.dictionary import stopwords_loader
 from jionlp.dictionary import idf_loader
+from jionlp.util import pkuseg_postag_loader
 
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -31,7 +33,7 @@ class ChineseSummaryExtractor(object):
 
     原理简述：为每个文本中的句子分配权重，权重计算包括 tfidf 方法的权重，以及
     LDA 主题权重，以及 lead-3 得到位置权重，并在最后结合 MMR 模型对句子做筛选，
-    得到抽取式摘要。（默认使用 jiojio 的分词工具效果好）
+    得到抽取式摘要。（默认使用 pkuseg 的分词工具效果好）
 
     Args:
         text(str): utf-8 编码中文文本，尤其适用于新闻文本
@@ -56,13 +58,10 @@ class ChineseSummaryExtractor(object):
         self.unk_topic_prominence_value = 0.
 
     def _prepare(self):
-        self.pos_name = set(sorted(list(jiojio.pos_types()['model_type'].keys())))
-        # self.pos_name = set(['a', 'ad', 'an', 'c', 'd', 'f', 'm', 'n', 'nr', 'nr1', 'nrf', 'ns', 'nt',
-        #                      'nz', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'vd', 'vi', 'w', 'wx', 'x'])
-
-        self.strict_pos_name = ['a', 'n', 'nr', 'ns', 'nt', 'nx', 'nz',
+        self.pos_name = set(pkuseg_postag_loader().keys())
+        self.strict_pos_name = ['a', 'n', 'j', 'nr', 'ns', 'nt', 'nx', 'nz',
                                 'ad', 'an', 'vn', 'vd', 'vx']
-        jiojio.init(pos_rule=True, pos=True)
+        self.seg = pkuseg.pkuseg(postag=True)  # 北大分词器
 
         # 加载 idf，计算其 oov 均值
         self.idf_dict = idf_loader()
@@ -125,14 +124,19 @@ class ChineseSummaryExtractor(object):
                 if not check_chinese_char(sen):  # 若无中文字符，则略过
                     continue
 
-                sen_segs = jiojio.cut(sen)
+                sen_segs = self.seg.cut(sen)
                 sentences_segs_dict.update({sen: [idx, sen_segs, list(), 0]})
                 counter_segs_list.extend(sen_segs)
 
             # step 3: 计算词频
             total_length = len(counter_segs_list)
-            freq_counter = Counter([item[0] for item in counter_segs_list])
-            freq_dict = dict(freq_counter.most_common())
+            freq_dict = dict()
+            for word_pos in counter_segs_list:
+                word, pos = word_pos
+                if word in freq_dict:
+                    freq_dict[word][1] += 1
+                else:
+                    freq_dict.update({word: [pos, 1]})
 
             # step 4: 计算每一个词的权重
             for sen, sen_segs in sentences_segs_dict.items():
@@ -142,7 +146,7 @@ class ChineseSummaryExtractor(object):
                     if pos not in self.pos_name and word in self.stop_words:  # 虚词权重为 0
                         weight = 0.0
                     else:
-                        weight = freq_dict[word] * self.idf_dict.get(
+                        weight = freq_dict[word][1] * self.idf_dict.get(
                             word, self.median_idf) / total_length
                     sen_segs_weights.append(weight)
 

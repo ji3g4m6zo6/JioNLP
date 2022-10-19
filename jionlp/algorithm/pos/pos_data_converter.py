@@ -2,27 +2,11 @@
 # library: jionlp
 # author: dongrixinyu
 # license: Apache License 2.0
-# Email: dongrixinyu.89@163.com
+# email: dongrixinyu.89@163.com
 # github: https://github.com/dongrixinyu/JioNLP
-# description: Preprocessing tool for Chinese NLP
+# description: Preprocessing & Parsing tool for Chinese NLP
+# website: http://www.jionlp.com
 
-"""
-DESCRIPTION:
-    1、CWS（分词）数据集有两种存储格式
-        word 格式，e.g.
-            ["他", "指出", "：", "近", "几", "年", "来", "，", "足球场", "风气", "差劲", "。"]
-        tag 格式，e.g.
-            [['他', '指', '出', '：', '近', '几', '年', '来', '，', '足', '球', '场', '风', '气', '差', '劲', '。'],
-             ['B', 'B', 'I', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'I', 'I', 'B', 'I', 'B', 'I', 'B']]
-
-        所有的 CWS 数据均在这两者之间进行转换，为保证数据中 \n\r\t 以及空格等转义
-        字符的稳定一致性，均采用 json 格式存储数据。
-
-    2、默认采用的标注标准为 BI 标签格式
-        分词有多套标注标准，如 BI、BIES 等等，相差均不大，为了明确词汇边界考虑，
-        并减少转移函数错误，默认选择 B(Begin)I(Inside|End)标签标注。
-
-"""
 
 import numpy as np
 from typing import List
@@ -30,45 +14,48 @@ from typing import List
 from jionlp import logging
 
 
-__all__ = ['word2tag', 'tag2word']
+__all__ = ['pos2tag', 'tag2pos']
 
 
-def word2tag(word_list: List[str]):
+def pos2tag(pos_list):
     """ 将实体 entity 格式转为 tag 格式，若标注过程中有重叠标注，则会自动将靠后的
     实体忽略、删除。针对单条处理，不支持批量处理。默认采用 BI 标注标准。
 
     Args:
-        word_list(List[str]): 分词词汇的 list
+        pos_list(List[List[str, str]]): 分词词汇的 list
     return:
         List[str, numpy.ndarray[str]]: tag 格式的数据
 
     Examples:
-        >>> word_list = ["他", "指出", "：", "近", "几", "年", "来", "，", "足球场", "风气", "差劲", "。"]
-        >>> print(jio.cws.word2tag(word_list))
+        >>> import jionlp as jio
+        >>> pos_list = [["他", "r"], ["指出", "v"], ["：", "w"], ["近", "a"]]
+        >>> print(jio.pos.pos2tag(pos_list))
 
         # ['他指出：近几年来，足球场风气差劲。',
-        #  numpy.ndarray(['B', 'B', 'I', 'B', 'B', 'B', 'B', 'B', 'B',
-        #                 'B', 'I', 'I', 'B', 'I', 'B', 'I', 'B'], dtype='<U1')]
+        #  numpy.ndarray(['B-r', 'B-v', 'I-v', 'B-w', 'B-a'], dtype='<U1')]
 
     """
 
-    chars = ''.join(word_list)
-    tags = np.empty(len(chars), dtype=np.unicode)
+    chars = ''.join([item[0] for item in pos_list])
+    tags = np.empty(len(chars), dtype='<U7')
 
     offset = 0
-    for word in word_list:
+    for item in pos_list:
+        word, tag = item
         word_length = len(word)
-        tags[offset] = 'B'
+
+        tags[offset] = 'B-' + tag
         if word_length >= 1:
-            tags[offset + 1: offset + word_length] = 'I'
+            tags[offset + 1: offset + word_length] = 'I-' + tag
+
         offset += word_length
 
     assert len(chars) == tags.shape[0]
     return [chars, tags]
 
 
-def tag2word(chars: str, tags: List[str], verbose=False):
-    """ 将 tag 格式转为词汇列表，
+def tag2pos(chars: str, tags: List[str], verbose=False):
+    """ 将 tag 格式转为词汇-词性列表，
     若格式中有破损不满足 BI 标准，则不转换为词汇并支持报错。
     该函数针对单条数据处理，不支持批量处理。
 
@@ -82,11 +69,16 @@ def tag2word(chars: str, tags: List[str], verbose=False):
         list: 词汇列表
 
     Examples:
-        >>> chars = '他指出：近几年来，足球场风气差劲。'
-        >>> tags = ['B', 'B', 'I', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'I', 'I', 'B', 'I', 'B', 'I', 'B']
-        >>> print(jio.cws.tag2word(chars, tags))
+        >>> import jionlp as jio
+        >>> chars = '他指出：近'
+        >>> tags = ['B-r', 'B-v', 'I-v', 'B-w', 'B-a']
+        >>> print(jio.pos.tag2pos(chars, tags))
 
-        # ["他", "指出", "：", "近", "几", "年", "来", "，", "足球场", "风气", "差劲", "。"]
+        # [["他", "r"], ["指出", "v"], ["：", "w], ["近", "a"]]
+
+    TODO:
+        该方法默认是未验证 I-type 标签的前后一致性的，
+        即 B-n, I-v, I-a 这样的序列串是无效的，但该方法无法检验出。
 
     """
 
@@ -94,7 +86,7 @@ def tag2word(chars: str, tags: List[str], verbose=False):
     assert len(chars) == tag_length, 'the length of `chars` and `tags` is not same.'
 
     if tag_length == 1:
-        return [chars]
+        return [[chars, tags[0].split('-')[1]]]
 
     def _wrong_message(_idx, ts):
         logging.info(chars)
@@ -102,12 +94,13 @@ def tag2word(chars: str, tags: List[str], verbose=False):
         logging.warning('wrong tag: {}'.format(
             ts[start if start is not None else max(0, _idx - 2): _idx + 2]))
 
-    word_list = list()
+    pos_list = list()
     start = None
+    pos_tag = None
 
     for idx, (tag, char) in enumerate(zip(tags, chars)):
 
-        if tag == 'I':
+        if tag.startswith('I'):
             if idx == 0:
                 if verbose:
                     _wrong_message(idx, tags)
@@ -115,31 +108,36 @@ def tag2word(chars: str, tags: List[str], verbose=False):
                 continue
             elif idx == tag_length - 1:
                 word = chars[start:]
+                pos_tag = tag.split('-')[1]
             else:
                 continue
 
-        elif tag == 'B':
+        elif tag.startswith('B'):
             if idx == 0:
                 start = idx
                 continue
             elif idx == tag_length - 1:
-                word_list.append(chars[start: idx])
+                pos_list.append([chars[start: idx], tags[start].split('-')[1]])
                 word = chars[-1]
+                pos_tag = tag.split('-')[1]
             else:
                 if start is None:
                     if verbose:
                         _wrong_message(idx, tags)
                     continue
                 word = chars[start: idx]
+                pos_tag = tags[start].split('-')[1]
                 start = idx
         else:
             if verbose:
                 _wrong_message(idx, tags)
-            return word_list
 
-        word_list.append(word)
+            return pos_list
 
-    assert len(''.join(word_list)) == len(chars), \
+        pos_list.append([word, pos_tag])
+
+    assert len(''.join([item[0] for item in pos_list])) == len(chars), \
         'the length of char list must be same.'
 
-    return word_list
+    return pos_list
+

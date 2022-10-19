@@ -4,12 +4,12 @@
 # license: Apache License 2.0
 # Email: dongrixinyu.89@163.com
 # github: https://github.com/dongrixinyu/JioNLP
-# description: Preprocessing tool for Chinese NLP
+# description: Preprocessing & Parsing tool for Chinese NLP
 
 
 import numpy as np
-import jieba
 
+import jiojio
 from jionlp.gadget.pinyin import Pinyin
 from jionlp.dictionary.dictionary_loader import word_distribution_loader
 
@@ -55,8 +55,7 @@ class HomophoneSubstitution(object):
         self.word_pinyin_dict = None
 
     def _prepare(self, homo_ratio=0.02, seed=1):
-        self.jieba_obj = jieba
-        self.jieba_obj.initialize()
+        jiojio.init()
 
         self.random = np.random
         self.seed = seed
@@ -91,6 +90,7 @@ class HomophoneSubstitution(object):
         for pinyin, word_dict in word_pinyin_dict.items():
             if len(word_dict) <= 1:  # 拼音对应词汇数量过少
                 continue
+
             word_keys = [item[0] for item in word_dict.items()]
             word_values = [item[1] for item in word_dict.items()]
             total_num = sum(word_values)
@@ -103,11 +103,21 @@ class HomophoneSubstitution(object):
 
     def __call__(self, text, augmentation_num=3, homo_ratio=0.02,
                  allow_mispronounce=True, seed=1):
-        if self.word_pinyin_dict is None or self.homo_ratio != homo_ratio \
-                or self.seed != seed:
+        if self.word_pinyin_dict is None:
             self._prepare(homo_ratio=homo_ratio, seed=seed)
 
-        segs = self.jieba_obj.lcut(text)
+        if self.seed != seed:
+            self.seed = seed
+            if seed != 0:
+                self.random.seed(seed)
+
+        if self.homo_ratio != homo_ratio:
+            self.homo_ratio = homo_ratio
+
+        segs = jiojio.cut(text)
+        if len(segs) > 0:
+            if type(segs[0]) is not str:  # 考虑 jiojio 将 pos 加载的情况。
+                segs = [seg[0] for seg in segs]
         pinyin_segs = [self.pinyin(seg, formater='detail') for seg in segs]
 
         augmentation_text_list = list()

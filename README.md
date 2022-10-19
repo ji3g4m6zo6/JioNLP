@@ -1,84 +1,67 @@
 <p align="center">
     <a alt="jionlp logo">
-        <img src="../../blob/master/image/jionlp_logo.jpg" / style="width:300px;height:130px">
+        <img src="../../blob/master/image/jionlp_logo.jpg" style="width:300px;height:100px">
     </a>
 </p>
 <p align="center">
     <a alt="License">
         <img src="https://img.shields.io/github/license/dongrixinyu/JioNLP?color=crimson" /></a>
     <a alt="Size">
-        <img src="https://img.shields.io/badge/size-20.1m-orange" /></a>
+        <img src="https://img.shields.io/badge/size-19.3m-orange" /></a>
     <a alt="Downloads">
-        <img src="https://img.shields.io/badge/downloads-6k-yellow" /></a>
+        <img src="https://pepy.tech/badge/jionlp/month" /></a>
     <a alt="Version">
-        <img src="https://img.shields.io/badge/version-1.3.50-green" /></a>
+        <img src="https://img.shields.io/badge/version-1.4.22-green" /></a>
     <a href="https://github.com/dongrixinyu/JioNLP/pulse" alt="Activity">
         <img src="https://img.shields.io/github/commit-activity/m/dongrixinyu/JioNLP?color=blue" /></a>
 </p>
 
-### &emsp;&emsp; ——JioNLP：中文 NLP 预处理工具包 A Python Lib for Chinese NLP Preprocessing
+### &emsp;&emsp; ——JioNLP：中文 NLP 预处理工具包 A Python Lib for Chinese NLP Preprocessing & Parsing
 ### &emsp;&emsp; ——安装：```pip install jionlp```
-### &emsp;&emsp; ——[JioNLP在线版](http://182.92.160.94:16666/#/) 可快速试用部分功能（测试版，可能存在不稳定）
+### &emsp;&emsp; ——[JioNLP在线版](http://www.jionlp.com/) 可快速试用部分功能
+### &emsp;&emsp; ——关注微信公众号 “一个Bug” 可获取最新的 JioNLP 更新，及 NLP 资讯
+### &emsp;&emsp; ——[English version README.md](../../blob/master/README_en.md)
 
 - 做 NLP 任务，需要清洗、过滤语料？用 JioNLP
 - 做 NLP 任务，需要做信息抽取？用 JioNLP
 - 做 NLP 任务，需要数据增强？用 JioNLP
 - 做 NLP 任务，需要给模型添加偏旁、拼音、词典、繁体转换信息？用 JioNLP
-#### 总之，JioNLP 提供 NLP 任务预处理功能，准确、高效、零使用门槛，并提供一步到位的查阅入口。
-
-#### 功能主要包括：文本清洗，删除HTML标签、删除异常字符、删除冗余字符，转换全角字母、数字、空格为半角，抽取及删除E-mail及域名、抽取及删除（手机号、座机号）电话号码、抽取及删除QQ号、抽取及删除括号内容、抽取及删除身份证号、抽取及删除IP地址、抽取及删除URL超链接、抽取及删除货币金额与单位，金额数字转大写汉字，时间语义解析，解析身份证号信息、解析手机号码归属地、解析座机区号归属地、解析手机号码运营商，按行快速读写文件，（多功能）停用词过滤，（优化的）分句，地址解析，新闻地域识别，繁简体转换，汉字转拼音，汉字偏旁、字形、四角编码、五笔编码拆解，基于词典的情感分析，色情数据过滤，反动数据过滤，关键短语抽取，抽取式文本摘要，成语接龙，成语词典、歇后语词典、新华字典、新华词典、停用词典、中国地名词典、中国县级地名变更词典、世界地名词典，时间实体抽取，基于词典的NER，NER的字、词级别转换，NER的entity和tag格式转换，NER模型的预测阶段加速并行工具集，NER标注和模型预测的结果差异对比，NER标注数据集分割与统计，NER实体收集、文本分类标注数据集的分割与统计、回译数据增强、相邻近汉字换位数据增强、同音词替换数据增强、随机增删字符数据增强、实体替换数据增强、公历转农历日期、农历转公历日期
+#### 总之，JioNLP 提供 NLP 任务预处理功能，准确、高效、零使用门槛，并提供一步到位的查阅入口。请下拉网页，查阅具体功能信息，并按 Ctrl + F 进行搜索。
 
 
-#### Update 2021-10-25
-## 更新 [货币金额实体抽取](../../wiki/NER-说明文档#user-content-货币金额实体抽取)
+#### Update 2022-07-03
+## 更新 [**归一化文本函数族**](../../wiki/正则抽取与解析-说明文档#user-content-归一化文本中的-e-mail)
 
-#### jio.ner.extract_money 从文本中抽取货币金额实体（不依赖模型，纯规则）。
-#### 配合 jio.parse_time 货币金额解析使用（见下一个 Update）
-``` python
-import jionlp as jio
-text = '张三赔偿李大花人民币车费601,293.11元，工厂费大约一万二千三百四十五元,利息叁伍佰日元，打印费人民币十块钱。'
-res = jio.ner.extract_money(text, with_parsing=False)
-print(res)
-
-# [{'text': '601,293.11元', 'offset': [12, 23], 'type': 'money'},
-#  {'text': '大约一万二千三百四十五元', 'offset': [27, 39], 'type': 'money'},
-#  {'text': '叁伍佰日元', 'offset': [42, 47], 'type': 'money'},
-#  {'text': '人民币十块钱', 'offset': [50, 56], 'type': 'money'}]
+#### 包括归一化电子邮箱名、IP地址、身份证号、URL、电话号码、QQ号等。
+#### jio.replace_email 归一化文本中的 E-mail 信息为<email>
 
 ```
+>>> text = '张晨星zcx@gmail.com，现在电子邮件可以带中文了吗？'
+>>> res = jionlp.replace_email(text)
+>>> print(res)
 
-#### 完整示例
-[JioNLP在线版-货币金额抽取与解析](http://182.92.160.94:16666/#/parse_money)
-
-#### Update 2021-10-25
-## 更新 [货币金额解析](../../wiki/正则抽取与解析-说明文档#user-content-货币金额解析)
-
-#### jio.parse_money 给定货币金额字符串，解析其标准金额、货币类型、精确度。
-
-```python
-import jionlp as jio
-text_list = ['约4.287亿美元', '两个亿卢布', '六十四万零一百四十三元一角七分', '3000多欧元', '三五佰块钱', '七百到九百亿泰铢'] 
-moneys = [jio.parse_money(text) for text in text_list]
-
-# 约4.287亿美元: {'num': '428700000.00', 'case': '美元', 'definition': 'blur'}
-# 两个亿卢布: {'num': '200000000.00', 'case': '卢布', 'definition': 'accurate'}
-# 六十四万零一百四十三元一角七分: {'num': '640143.17', 'case': '元', 'definition': 'accurate'}
-# 3000多欧元: {'num': ['3000.00', '4000.00'], 'case': '欧元', 'definition': 'blur'}
-# 三五百块钱: {'num': ['300.00', '500.00'], 'case': '元', 'definition': 'blur'}
-# 七百到九百亿泰铢: {'num': ['70000000000.00', '90000000000.00'], 'case': '泰铢', 'definition': 'blur'}
-
+# '张晨星<email>，现在电子邮件可以带中文了吗？'
 ```
 
-- 支持纯数字格式，如：987273.3美元
-- 支持大写中文金额，如：柒仟六佰零弎萬肆仟叁佰贰拾壹元伍分
-- 支持混合格式，如：1.26万港元
-- 支持**修饰词**解析，如：将近6万块钱、至少1000块钱以上
-- 支持**模糊金额**解析，如：两万多元钱，6千多亿日元
-- 支持**金额范围**解析，如：十二到十五万泰铢、三四仟块钱
-- 支持**口语化中文**格式，如：三十五块三毛；但对于“三十五块八”这样的字符串，在文本中存在**歧义**，如“三十五块八颗糖”等，因此，```jio.ner.extract_money``` 对于此字符串不予抽取，但```parse_money```可以将“三十五块八”看作完整的口语化金额，标准化为“35.80元”
-- 支持多种常见货币类型：人民币，港元，澳门元，美元，日元，澳元，韩元，卢布，英镑，马克，法郎，欧元，加元，泰铢，台币等。
+#### Updata 2022-05-26
+## 更新 [**关键短语抽取**](../../wiki/Gadget-说明文档#user-content-关键短语抽取) 
 
-#### Update 2021-11-19
+#### jio.keyphrase.extract_keyphrase 对一篇文本关键短语抽取
+```
+>>> import jionlp as jio
+>>> text = '浑水创始人：七月开始调查贝壳，因为“好得难以置信” 2021年12月16日，做空机构浑水在社交媒体上公开表示，正在做空美股上市公司贝壳...'
+
+>>> keyphrases = jio.keyphrase.extract_keyphrase(text)
+>>> print(keyphrases)
+>>> print(jio.keyphrase.extract_keyphrase.__doc__)
+
+# ['浑水创始人', '开始调查贝壳', '做空机构浑水', '美股上市公司贝壳', '美国证监会']
+
+```
+- [JioNLP源站-关键短语抽取](http://www.jionlp.com/jionlp_online/extract_keyphrase)
+
+
+#### Update 2022-07-02
 ## 更新 [时间语义解析](../../wiki/时间语义解析-说明文档#user-content-时间语义解析)
 
 #### jio.parse_time 给定时间字符串，解析其为时间戳、时长等。
@@ -90,7 +73,8 @@ res = jio.parse_time('今年9月', time_base={'year': 2021})
 res = jio.parse_time('零三年元宵节晚上8点半', time_base=time.time())
 res = jio.parse_time('一万个小时')
 res = jio.parse_time('100天之后', time.time())
-res = jio.parse_time('每周五下午4点', time.time())
+res = jio.parse_time('四月十三', lunar_date=False)
+res = jio.parse_time('每周五下午4点', time.time(), period_results_num=2)
 print(res)
 
 # {'type': 'time_span', 'definition': 'accurate', 'time': ['2021-09-01 00:00:00', '2021-09-30 23:59:59']}
@@ -98,7 +82,10 @@ print(res)
 # {'type': 'time_delta', 'definition': 'accurate', 'time': {'hour': 10000.0}}
 # {'type': 'time_span', 'definition': 'blur', 'time': ['2021-10-22 00:00:00', 'inf']}
 # {'type': 'time_period', 'definition': 'accurate', 'time': {'delta': {'day': 7}, 
-#  'point': {'time': ['2021-07-16 16:00:00', '2021-07-16 16:59:59'], 'string': '周五下午4点'}}}
+# {'type': 'time_point', 'definition': 'accurate', 'time': ['2022-04-13 00:00:00', '2022-04-13 23:59:59']}
+#  'point': {'time': [['2021-07-16 16:00:00', '2021-07-16 16:59:59'],
+#                     ['2021-07-23 16:00:00', '2021-07-23 16:59:59']], 'string': '周五下午4点'}}}
+
 ```
 
 - 目前支持年月日、时分秒、星期、季节、季度、节日、农历、时间范围、时间段、时间周期、模糊时间代词等解析。
@@ -107,7 +94,7 @@ print(res)
 - 目前支持的所有 [测试用例](../../blob/master/test/test_time_parser.py)
 
 #### 完整示例
-[JioNLP在线版-时间抽取与解析](http://182.92.160.94:16666/#/extract_time)
+[JioNLP源站-时间抽取与解析](http://www.jionlp.com/jionlp_online/extract_time)
 
 
 ## 安装 Installation
@@ -122,19 +109,14 @@ $ pip install .
 ```
 $ pip install jionlp
 ```
-- 可能存在的问题
-```
-# 如安装失败，遇到安装时提示的 pkuseg、Microsoft Visual C++、gcc、g++ 等信息，
-# 则说明是 pkuseg 安装失败，需要在相应系统中安装 C 和 C++ 编译器，重新安装。
-# pip install pkuseg
-# pkuseg 由于久未更新，对 python>=3.9 不兼容，若遇到调用报错，则须退回至 3.8 版本以下的解释器。
-```
+
 
 ## 使用 Features
 
 - 导入工具包，查看工具包的主要功能与函数注释
 ```
 >>> import jionlp as jio
+>>> print(jio.__version__)  # 查看 jionlp 的版本
 >>> jio.help()  # 输入关键词搜索工具包是否包含某功能，如输入“回译”
 >>> dir(jio)
 >>> print(jio.extract_parentheses.__doc__)
@@ -150,6 +132,7 @@ $ jio_help
 | 功能   | 函数   |描述   |星级   |
 |--------|-------|-------|-------|
 |[**查找帮助**](../../wiki/Gadget-说明文档#user-content-查找帮助) |help|若不知道 JioNLP 有哪些功能，可根据命令行提示键入若干关键词做搜索 | |
+|[**车牌号**解析](../../wiki/Gadget-说明文档#user-content-解析车牌号) |parse_motor_vehicle_licence_plate|给定一个车牌号，对其进行解析 |⭐|
 |[**时间语义解析**](../../wiki/时间语义解析-说明文档#user-content-时间语义解析) |parse_time|给定时间文本，解析其时间语义（时间戳、时长）等 |⭐|
 |[**关键短语抽取**](../../wiki/Gadget-说明文档#user-content-关键短语抽取) |extract_keyphrase|给定一篇文本，抽取其对应关键短语 |⭐|
 |[抽取式**文本摘要**](../../wiki/Gadget-说明文档#user-content-抽取式文本摘要) |extract_summary|给定一篇文本，抽取其对应文摘 | |
@@ -168,6 +151,8 @@ $ jio_help
 |[汉字转**拼音**](../../wiki/Gadget-说明文档#user-content-汉字转拼音) |pinyin| 找出中文文本对应的汉语拼音，并可返回**声母**、**韵母**、**声调** |⭐ |
 |[汉字转**偏旁与字形**](../../wiki/Gadget-说明文档#user-content-汉字转偏旁与字形) |char_radical| 找出中文文本对应的汉字字形结构信息，<br>包括**偏旁部首**(“河”氵)、**字形结构**(“河”左右结构)、<br>**四角编码**(“河”31120)、**汉字拆解**(“河”水可)、<br>**五笔编码**(“河”ISKG) |⭐ |
 |[金额**数字转汉字**](../../wiki/正则抽取与解析-说明文档#user-content-金额数字转汉字)|money_num2char| 给定一条数字金额，返回其**汉字**大写结果 | |
+|[**新词发现**](../../wiki/Gadget-说明文档#user-content-新词发现)|new_word_discovery| 给定一语料文本文件，统计其中高可能成词 | |
+
 
 ### 2.数据增强
 
@@ -189,12 +174,14 @@ $ jio_help
 |[**清洗文本**](../../wiki/正则抽取与解析-说明文档#user-content-清洗文本) |clean_text|去除文本中的**异常字符、冗余字符、HTML标签、括号信息、**<br>**URL、E-mail、电话号码，全角字母数字转换为半角** |⭐ |
 |[抽取 **E-mail**](../../wiki/正则抽取与解析-说明文档#user-content-抽取-e-mail) |extract_email|抽取文本中的 E-mail，返回**位置**与**域名** | |
 |[解析 **货币金额**](../../wiki/正则抽取与解析-说明文档#user-content-货币金额解析) |extract_money|解析货币金额字符串 |⭐ |
+|[抽取**微信号**](../../wiki/正则抽取与解析-说明文档#user-content-抽取-微信号) |extract_wechat_id| 抽取微信号，返回**位置** | |
 |[抽取**电话号码**](../../wiki/正则抽取与解析-说明文档#user-content-抽取电话号码) |extract_phone_number| 抽取电话号码(含**手机号**、**座机号**)，返回**域名**、**类型**与**位置** | |
 |[抽取中国**身份证** ID](../../wiki/正则抽取与解析-说明文档#user-content-抽取身份证号) |extract_id_card|抽取身份证 ID，配合 **jio.parse_id_card** 返回身份证的<br>详细信息(**省市县**、**出生日期**、**性别**、**校验码**)| |
 |[抽取 **QQ** 号](../../wiki/正则抽取与解析-说明文档#user-content-抽取-qq) |extract_qq|抽取 QQ 号，分为严格规则和宽松规则 | |
 |[抽取 **URL**](../../wiki/正则抽取与解析-说明文档#user-content-抽取-url-超链接) |extract_url|抽取 URL 超链接 | |
 |[抽取 **IP**地址](../../wiki/正则抽取与解析-说明文档#user-content-抽取-ip-地址) |extract_ip_address|抽取 IP 地址| |
 |[抽取**括号**中的内容](../../wiki/正则抽取与解析-说明文档#user-content-抽取文本括号信息) |extract_parentheses|抽取括号内容，包括 **{}「」[]【】()（）<>《》** |⭐ |
+|[抽取**车牌号**](../../wiki/正则抽取与解析-说明文档#user-content-抽取车牌号) |extract_motor_vehicle_licence_plate|抽取大陆车牌号信息 | |
 |[删除 **E-mail**](../../wiki/正则抽取与解析-说明文档#user-content-删除文本中的-e-mail) |remove_email|删除文本中的 E-mail 信息 | |
 |[删除 **URL**](../../wiki/正则抽取与解析-说明文档#user-content-删除文本中的-url) |remove_url |删除文本中的 URL 信息| |
 |[删除 **电话号码**](../../wiki/正则抽取与解析-说明文档#user-content-删除电话号码) |remove_phone_number|删除文本中的电话号码 | |
@@ -203,7 +190,15 @@ $ jio_help
 |[删除 **QQ**](../../wiki/正则抽取与解析-说明文档#user-content-删除文本中的-qq-号) |remove_qq|删除文本中的 qq 号| |
 |[删除 **HTML**标签](../../wiki/正则抽取与解析-说明文档#user-content-删除文本中的-html-标签) |remove_html_tag|删除文本中残留的 HTML 标签 | |
 |[删除**括号**中的内容](../../wiki/正则抽取与解析-说明文档#user-content-删除文本括号信息) |remove_parentheses|删除括号内容，包括 **{}「」[]【】()（）<>《》** | |
-|[删除异常字符](../../wiki/正则抽取与解析-说明文档#user-content-删除文本中的异常字符) |remove_exception_char|删除文本中异常字符，主要保留汉字、常用的标点，<br>单位计算符号，字母数字等 | |
+|[删除**异常**字符](../../wiki/正则抽取与解析-说明文档#user-content-删除文本中的异常字符) |remove_exception_char|删除文本中异常字符，主要保留汉字、常用的标点，<br>单位计算符号，字母数字等 | |
+|[删除**冗余**字符](../../wiki/正则抽取与解析-说明文档#user-content-删除文本中的冗余字符) |remove_redundant_char|删除文本中冗余重复字符 | |
+|[归一化 **E-mail**](../../wiki/正则抽取与解析-说明文档#user-content-归一化文本中的-e-mail) |replace_email|归一化文本中的 E-mail 信息为\<email\> | |
+|[归一化 **URL**](../../wiki/正则抽取与解析-说明文档#user-content-归一化文本中的-url) |replace_url |归一化文本中的 URL 信息为\<url\> | |
+|[归一化 **电话号码**](../../wiki/正则抽取与解析-说明文档#user-content-归一化电话号码) |replace_phone_number|归一化文本中的电话号码为\<tel\> | |
+|[归一化 **IP地址**](../../wiki/正则抽取与解析-说明文档#user-content-归一化文本中的-ip-地址)|replace_ip_address|归一化文本中的 IP 地址为\<ip\> | |
+|[归一化 **身份证号**](../../wiki/正则抽取与解析-说明文档#user-content-归一化文本中的身份证号) |replace_id_card|归一化文本中的身份证信息为\<id\> | |
+|[归一化 **QQ**](../../wiki/正则抽取与解析-说明文档#user-content-归一化文本中的-qq-号) |replace_qq|归一化文本中的 qq 号为\<qq\> | |
+
 
 ### 4.文件读写工具
 
@@ -266,20 +261,28 @@ $ jio_help
 |[**word 转 tag**](../../wiki/分词-说明文档#user-content-word-转-tag) |cws.word2tag|将 json 格式分词序列转换为模型处理的 tag 序列 | |
 |[**tag 转 word**](../../wiki/分词-说明文档#user-content-tag-转-word) |cws.tag2word|将模型处理的 tag 序列转换为 json 格式分词 | |
 |[**统计F1值**](../../wiki/分词-说明文档#user-content-统计-f1-值) |cws.f1|比对分词标注标签于模型预测标签的F1值 | |
+|[**分词数据矫正-标准词典**](../../wiki/分词-说明文档#user-content-分词数据矫正-标准词典) |cws.CWSDCWithStandardWords |使用标准词典对分词标注数据进行矫正和修复 | |
 
+### 文献引用
+
+- 若论文需要进行引用，可复制以下引用：
+
+> Chengyu Cui, JioNLP, (2020), GitHub repository, https://github.com/dongrixinyu/JioNLP
 
 ### 初衷
 
 - NLP 预处理与解析至关重要，且非常耗时。本 lib 能快速辅助完成各种琐碎的预处理、解析操作，加速开发进度，把有限的精力用在思考而非 code 上。
 - 如有功能建议、bug，可通过 issue 按模板提出。
-- 如感兴趣合作完善本工具包，请参考 **TODO.txt** 文件进行功能添加。
+- 非常欢迎各位 NLP 开发者和研究者 **合作完善本工具包，添加新功能** 。
 
-### 做 NLP不易，欢迎加入自然语言处理 Wechat 交流群
-### 如以下码失效，请先添加 vx：dongrixinyu89
-![image](../../blob/master/image/qr_code_for_collection.png)
 ### 如本工具对您有帮助，请点一下右上角 star ⭐
 ### 或者扫码请作者喝杯咖啡 (●'◡'●)，谢谢啦 ~~
 - 感谢[致谢](../../wiki/致谢篇)名单中赞助的小伙伴们，你们的打赏让我更有动力
 
-![image](../../blob/master/image/payment_code.png)
+![image](../../blob/master/image/payment_code.jpg)
+
+### 做 NLP不易，欢迎加入自然语言处理 Wechat 交流群
+### 请扫以下码，或wx搜索公众号“一个Bug”，关注并回复【进群】
+![image](../../blob/master/image/qrcode_for_gh.jpg)
+
 

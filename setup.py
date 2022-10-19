@@ -5,12 +5,11 @@
 # license: Apache License 2.0
 # Email: dongrixinyu.89@163.com
 # github: https://github.com/dongrixinyu/JioNLP
-# description: Preprocessing tool for Chinese NLP
+# description: Preprocessing & Parsing tool for Chinese NLP
 """
 
 import os
 import re
-
 from setuptools import setup, find_packages
 
 
@@ -18,13 +17,11 @@ DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 LONG_DOC = '''
 ==================================== JioNLP ====================================
 
-中文 NLP 数据预处理工具包，完成训练 NLP 模型前后的数据预处理，如文本数据增强、文本清洗、特定
-信息抽取、数据集概况分析、模型加速、相关模型任务 baseline、词典等。
+中文 NLP 文本预处理与解析工具包，完成 NLP 模型训练前后的预处理与解析，如文本数据增强、
+文本清洗、特定信息抽取、数据集概况分析、模型加速、相关模型任务 baseline、各类词典等。
 
 # 安装：
-    $ git clone https://github.com/dongrixinyu/JioNLP
-    $ cd ./JioNLP
-    $ pip install .
+    $ pip install jionlp
 
 # 导入：
     >>> import jionlp as jio
@@ -54,10 +51,14 @@ __url__ = 'https://github.com/dongrixinyu/JioNLP'
 __description__ = 'Chinese NLP Preprocessing & Parsing'
 
 
-with open(os.path.join(DIR_PATH, 'requirements.txt'), 
+with open(os.path.join(DIR_PATH, 'requirements.txt'),
           'r', encoding='utf-8') as f:
     requirements = f.readlines()
 
+# delete test module
+jionlp_packages = find_packages()
+if 'test' in jionlp_packages:
+    jionlp_packages.remove('test')
 
 setup(name=__name__,
       version=__version__,
@@ -69,7 +70,7 @@ setup(name=__name__,
       long_description_content_type='text/markdown',
       license=__license__,
       py_modules=list(),
-      packages=find_packages(),
+      packages=jionlp_packages,
       include_package_data=True,
       install_requires=requirements,
       entry_points={

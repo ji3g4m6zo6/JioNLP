@@ -3,12 +3,13 @@
 # library: jionlp
 # author: dongrixinyu
 # license: Apache License 2.0
-# Email: dongrixinyu.89@163.com
+# email: dongrixinyu.89@163.com
 # github: https://github.com/dongrixinyu/JioNLP
-# description: Preprocessing tool for Chinese NLP
+# description: Preprocessing & Parsing tool for Chinese NLP
+# website: www.jionlp.com
 """
 
-__version__ = '1.3.50'
+__version__ = '1.4.22'
 
 
 import os
@@ -23,7 +24,8 @@ logging = set_logger(level=None, log_dir_name=None)
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 for file_name in UNZIP_FILE_LIST:
     if not os.path.exists(os.path.join(DIR_PATH, 'dictionary', file_name)):
-        unzip_file()
+        zip_file = '.'.join(file_name.split('.')[:-1]) + '.zip'
+        unzip_file(zip_file)
 
 
 history = """
@@ -77,6 +79,17 @@ history = """
 │   | 2021-10-25 | update extract money and parse money                |   │
 │   | 2021-11-10 | add logger tuner                                    |   │
 │   | 2021-12-04 | add chinese word segmentor tools                    |   │
+│   | 2022-03-02 | update email & tel rules                            |   │
+│   | 2022-03-07 | update time period parser                           |   │
+│   | 2022-03-24 | add cws labeled sample correction                   |   │
+│   | 2022-04-10 | update money extractor                              |   │
+│   | 2022-05-26 | transfer from pkuseg to jiojio                      |   │
+│   | 2022-06-13 | add new_word_discovery                              |   │
+│   | 2022-06-15 | expose and update redundant char remover            |   │
+│   | 2022-07-03 | add replace_xxx functions                           |   │
+│   | 2022-07-30 | add extract_wechat_id functions                     |   │
+│   | 2022-09-06 | fix extract_money bug                               |   │
+│   | 2022-10-15 | add extract & parse motor vehicle licence plate     |   │
 │                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────╯
 """
@@ -89,5 +102,3 @@ from jionlp.gadget import *
 from jionlp.textaug import *
 from jionlp.algorithm import *
 
-# from jionlp.util.fast_loader import FastLoader
-# rule = FastLoader('rule', globals(), 'jionlp.rule')

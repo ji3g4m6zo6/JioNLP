@@ -1,5 +1,4 @@
 numpy
-jieba
+jiojio
 requests
 zipfile36
-spacy-pkuseg
